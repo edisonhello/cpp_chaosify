@@ -53,6 +53,7 @@ int main() {
     string s; while (getline(cin, s)) {
         if (s.empty()) { outputs.push_back(s); continue; }
         if (s[0] == '#') { outputs.push_back(s); continue; }
+        if (s.substr(0, 2) == "//") { continue; }
         string output;
         for (int i = 0; i < int(s.size()); ++i) {
             if (s[i] == '\'') {
@@ -111,17 +112,10 @@ int main() {
         outputs.push_back(output);
         // outputs.push_back("// " + s);
     }
-    int last_include = 0;
-    for (int i = 0; i < int(outputs.size()); ++i) {
-        if (outputs[i].substr(0, 5) == "#incl") last_include = i;
-    }
-    for (int i = 0; i <= last_include; ++i) {
-        cout << outputs[i] << endl;
-    }
     for (auto &p : mp) {
         cout << "#define " << p.second << " " << p.first << endl;
     }
-    for (int i = last_include + 1; i < int(outputs.size()); ++i) {
+    for (int i = 0; i < int(outputs.size()); ++i) {
         cout << remove_continue_space(outputs[i]) << endl;
     }
 }
