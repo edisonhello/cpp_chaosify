@@ -1,6 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+const int LEN = 5;
+
 string charset = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
 
 uint64_t mrand(uint64_t change = 0) {
@@ -17,7 +19,7 @@ uint64_t mhash(string s = "") {
 
 string rand_string(string str = "") {
     string s;
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < LEN; ++i) {
         s += charset[mrand(mhash(str)) % charset.size()];
     }
     return s;
@@ -115,7 +117,32 @@ int main() {
     for (auto &p : mp) {
         cout << "#define " << p.second << " " << p.first << endl;
     }
-    for (int i = 0; i < int(outputs.size()); ++i) {
-        cout << remove_continue_space(outputs[i]) << endl;
+    vector<string> tmp; tmp.swap(outputs);
+    deque<string> blocks;
+    auto clear = [&] () -> void {
+        string s;
+        while (blocks.size()) {
+            s += blocks.front() + " "; blocks.pop_front();
+            if (int(s.size()) > (LEN + 1) * 5) {
+                outputs.push_back(s);
+                s = "";
+            }
+        }
+        if (s.size()) outputs.push_back(s);
+    };
+    for (string s : tmp) {
+        if (s.empty()) clear(), outputs.push_back(s);
+        else if (s[0] == '#') clear(), outputs.push_back(s);
+        else if ([] (string s) -> bool {
+            for (char c : s) if (!isspace(c)) return 0;
+            return 1;
+        }(s)) clear(), outputs.push_back(s);
+        else {
+            stringstream ss(s);
+            while (ss >> s) blocks.push_back(s);
+        }
     }
+    clear();
+
+    for (string s : outputs) cout << s << endl;
 }

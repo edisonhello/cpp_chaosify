@@ -5,3 +5,4 @@ A tool that can make your code unreadable to everyone (include yourself).
 ## Can't do
 
 1. Floating number in code.
+2. Multi-line comment in code.
